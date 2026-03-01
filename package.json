@@ -1,0 +1,16 @@
+{
+  "name": "bgmi-tournament",
+  "version": "1.0.0",
+  "description": "BGMI LIVE TOURNAMENTS",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js",
+    "build": "cd client && npm install && npm run build"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1"
+  }
+}
