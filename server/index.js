@@ -108,7 +108,9 @@ let schedulerStarted = false;
 
 const app = express()
 app.use(cors())
-app.use(express.json())
+
+// Express 5 JSON configuration - be more lenient with JSON parsing
+app.use(express.json({ strict: false, reviver: null }))
 
 // Serve static files for uploads
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
@@ -125,6 +127,7 @@ app.use("/api/tournaments", tournamentRoutes)
 app.use("/api/transactions", transactionRoutes)
 
 // Serve static files from React build in production
+app.use(express.static(clientDistPath))
 
 // Handle React routing, return index.html for unknown routes
 // Express 5 requires middleware approach instead of app.get("*")

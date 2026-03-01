@@ -1,4 +1,5 @@
 import express from "express";
+import bcrypt from "bcryptjs";
 import JoinRequest from "../models/JoinRequest.js";
 import Contestant from "../models/Contestant.js";
 import Tournament from "../models/Tournament.js";
@@ -116,12 +117,13 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // Trim passwords to avoid whitespace issues
-    const trimmedInputPassword = password.trim();
-    const trimmedStoredPassword = storedPassword.trim();
+    // Check password using bcrypt
+    const isPasswordValid = await bcrypt.compare(password, storedPassword);
     
-    // Check password (with trimming to handle whitespace issues)
-    if (trimmedStoredPassword !== trimmedInputPassword) {
+    // Also try plain text comparison for backward compatibility
+    const isPlainTextMatch = storedPassword === password || storedPassword === password.trim();
+    
+    if (!isPasswordValid && !isPlainTextMatch) {
       console.log(`Login failed for ${phone}: password mismatch`);
       return res.status(401).json({
         success: false,
@@ -177,12 +179,15 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    // Create new contestant - NOW INCLUDES PASSWORD
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new contestant - NOW INCLUDES HASHED PASSWORD
     const newContestant = new Contestant({
       playerName,
       phone,
       email,
-      password  // Now saving password to database!
+      password: hashedPassword  // Saving hashed password to database
     });
 
     await newContestant.save();
@@ -190,8 +195,7 @@ router.post("/register", async (req, res) => {
     console.log("✅ New contestant registered:", {
       playerName,
       phone,
-      email,
-      password: password  // This will now be saved
+      email
     });
 
     res.status(201).json({

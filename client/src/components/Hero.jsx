@@ -36,8 +36,8 @@ export default function Hero() {
 
           {/* Social Icons with Highlighted Caption */}
           <div className="flex flex-col gap-3 mb-6">
-            <p className="text-white text-lg font-bold bg-gradient-to-r from-yellow-400 to-orange-500 px-4 py-2 rounded-lg shadow-lg">
-              For all the live streams subscribe this channel and all the updates follow this account
+<p className="text-white text-xl font-bold uppercase tracking-wider bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 px-6 py-3 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
+              🎮 FOR ALL THE LIVE STREAMS — SUBSCRIBE THIS CHANNEL! &nbsp;🔔 FOR ALL THE UPDATES — FOLLOW THIS ACCOUNT! 🎯
             </p>
             <div className="flex gap-6">
               <a href="https://www.youtube.com/channel/UC4qZgCA_-OEKlePzuauNbkw" target="_blank" rel="noopener noreferrer" title="YouTube Live">
