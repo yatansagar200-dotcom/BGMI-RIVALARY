@@ -2,15 +2,20 @@
   "name": "bgmi-tournament",
   "version": "1.0.0",
   "description": "BGMI LIVE TOURNAMENTS",
-  "main": "src/index.js",
-  "type": "commonjs",
+  "main": "server/index.js",
+  "type": "module",
   "scripts": {
-    "start": "node src/index.js",
-    "build": "cd client && npm install && npm run build"
+    "start": "node server/index.js",
+    "build": "cd client && npm install && npm run build",
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install"
   },
   "dependencies": {
+    "axios": "^1.13.5",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "mongoose": "^9.2.1",
+    "multer": "^2.0.2"
   }
 }
