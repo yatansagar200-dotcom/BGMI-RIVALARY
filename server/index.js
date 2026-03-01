@@ -125,7 +125,6 @@ app.use("/api/tournaments", tournamentRoutes)
 app.use("/api/transactions", transactionRoutes)
 
 // Serve static files from React build in production
-app.use(express.static(clientDistPath))
 
 // Handle React routing, return index.html for unknown routes
 // Express 5 requires middleware approach instead of app.get("*")
