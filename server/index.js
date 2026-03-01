@@ -17,6 +17,18 @@ dotenv.config()
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+// Determine the correct paths for different environments
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER;
+
+// For Render (production), the structure is different
+// /opt/render/project/src/server -> /opt/render/project/src/client/dist
+const clientDistPath = isProduction 
+  ? path.join(__dirname, '../client/dist')
+  : path.join(__dirname, '../client/dist');
+
+console.log('Environment:', isProduction ? 'Production (Render)' : 'Development');
+console.log('Client dist path:', clientDistPath);
+
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -79,12 +91,12 @@ const autoUpdateTournamentStatuses = async () => {
         tournament.status = calculatedStatus;
         await tournament.save();
         updatedCount++;
-        console.log(`🔄 Tournament "${tournament.name}" status updated to: ${calculatedStatus}`);
+        console.log(`Tournament "${tournament.name}" status updated to: ${calculatedStatus}`);
       }
     }
     
     if (updatedCount > 0) {
-      console.log(`✅ Updated ${updatedCount} tournament status(s)`);
+      console.log(`Updated ${updatedCount} tournament status(s)`);
     }
   } catch (err) {
     console.error("Error auto-updating tournament statuses:", err);
@@ -113,7 +125,7 @@ app.use("/api/tournaments", tournamentRoutes)
 app.use("/api/transactions", transactionRoutes)
 
 // Serve static files from React build in production
-app.use(express.static(path.join(__dirname, "../client/dist")))
+app.use(express.static(clientDistPath))
 
 // Handle React routing, return index.html for unknown routes
 // Express 5 requires middleware approach instead of app.get("*")
@@ -122,7 +134,7 @@ app.use((req, res, next) => {
   if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
     return next();
   }
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+  res.sendFile(path.join(clientDistPath, 'index.html'));
 });
 
 // Error handling middleware
@@ -137,7 +149,7 @@ app.use((err, req, res, next) => {
 
 app.get("/", (req, res) => {
   res.send({ 
-    message: "BGMI Backend Running 💥", 
+    message: "BGMI Backend Running", 
     version: "2.0.0",
     features: ["wallet", "profile", "transactions", "auto-status-update"]
   })
@@ -149,7 +161,7 @@ const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/bgmi_tourn
 mongoose
   .connect(MONGO_URI)
   .then(() => {
-    console.log("MongoDB Connected 🔥")
+    console.log("MongoDB Connected")
     
     // Start the auto-update scheduler
     if (!schedulerStarted) {
@@ -161,7 +173,7 @@ mongoose
       // Then run every minute (60000 ms)
       setInterval(autoUpdateTournamentStatuses, 60000);
       
-      console.log("⏰ Tournament status auto-update scheduler started (every 1 minute)");
+      console.log("Tournament status auto-update scheduler started (every 1 minute)");
     }
     
     app.listen(PORT, () =>

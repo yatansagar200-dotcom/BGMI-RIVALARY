@@ -1,1 +1,1 @@
-web: cd server && npm start
+web: npm install && npm run build && cd server && npm start
