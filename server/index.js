@@ -18,16 +18,16 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // Determine the correct paths for different environments
-const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER;
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
 
-// For Render (production), the structure is different
+// For Render (production), the structure is:
 // /opt/render/project/src/server -> /opt/render/project/src/client/dist
-const clientDistPath = isProduction 
-  ? path.join(__dirname, '../client/dist')
-  : path.join(__dirname, '../client/dist');
+// For local development, the structure is the same
+const clientDistPath = path.join(__dirname, '../client/dist');
 
 console.log('Environment:', isProduction ? 'Production (Render)' : 'Development');
 console.log('Client dist path:', clientDistPath);
+console.log('__dirname:', __dirname);
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
